@@ -2,8 +2,6 @@
 
 namespace Mrself\Container\Registry;
 
-use Mrself\Options\InvalidContainerException;
-
 class ContainerRegistry
 {
     /**
@@ -37,7 +35,7 @@ class ContainerRegistry
             throw new OverwritingException($namespace, $container);
         }
         if (!self::isContainerValid($container)) {
-            throw new InvalidContainerException($container);
+            throw new InvalidContainerException($namespace, $container);
         }
         static::$containers[$namespace] = $container;
     }
@@ -45,6 +43,21 @@ class ContainerRegistry
     public static function has(string $namespace): bool
     {
         return array_key_exists($namespace, static::$containers);
+    }
+
+    public static function setContainers(array $containers)
+    {
+        self::$containers = $containers;
+    }
+
+    public static function getContainers(): array
+    {
+        return self::$containers;
+    }
+
+    public static function reset()
+    {
+        self::$containers = [];
     }
 
     protected static function isContainerValid($container)

@@ -14,12 +14,12 @@ class OverwritingException extends ContainerException
     /**
      * @var mixed
      */
-    protected $value;
+    protected $container;
 
-    public function __construct(string $key, $value)
+    public function __construct(string $key, $container)
     {
         $this->key = $key;
-        $this->value = $value;
+        $this->container = $container;
 
         parent::__construct("Trying to overwrite the container by the key '$key'. To force overwriting call the method with \$overwrite = true.");
     }
@@ -35,8 +35,8 @@ class OverwritingException extends ContainerException
     /**
      * @return mixed
      */
-    public function getValue()
+    public function getContainer()
     {
-        return $this->value;
+        return $this->container;
     }
 }
