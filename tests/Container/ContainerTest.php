@@ -14,6 +14,10 @@ class ContainerTest extends TestCase
      */
     protected $container;
 
+    /**
+     * Start services tests
+     */
+
     public function testItRetrievesServiceByKey()
     {
         $this->container->setServices(['key' => 1]);
@@ -68,6 +72,14 @@ class ContainerTest extends TestCase
         $this->assertFalse($this->container->has('key'));
     }
 
+    /**
+     * End services tests
+     */
+
+    /**
+     * Start parameters tests
+     */
+
     public function testItRetrievesParameterByKey()
     {
         $this->container->setParameters(['key' => 1]);
@@ -121,6 +133,10 @@ class ContainerTest extends TestCase
     {
         $this->assertFalse($this->container->has('key'));
     }
+
+    /**
+     * End services tests
+     */
 
     public function setUp()
     {
