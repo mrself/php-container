@@ -74,7 +74,7 @@ class ContainerTest extends TestCase
         $this->assertEquals(1, $this->container->getParameter('key'));
     }
 
-    public function testGetParameterThrowsErrorIfServiceDoesNotExistByProvidedKey()
+    public function testGetParameterThrowsErrorIfParameterIsAbsent()
     {
         try {
             $this->container->getParameter('key');
