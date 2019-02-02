@@ -11,13 +11,17 @@ class ContainerRegistry
 
     /**
      * @param string $namespace
+     * @param bool $default
      * @return mixed
      * @throws NotFoundException
      */
-    public static function get(string $namespace)
+    public static function get(string $namespace, $default = false)
     {
         if (!static::has($namespace)) {
-            throw new NotFoundException($namespace);
+            if ($default === false) {
+                throw new NotFoundException($namespace);
+            }
+            return $default;
         }
         return static::$containers[$namespace];
     }

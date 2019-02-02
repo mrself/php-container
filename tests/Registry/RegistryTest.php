@@ -26,6 +26,12 @@ class RegistryTest extends TestCase
         $this->assertEquals($this->container, ContainerRegistry::get('key'));
     }
 
+    public function testGetReturnsDefaultIfContainerIsAbsent()
+    {
+        $value = ContainerRegistry::get('key', 'default');
+        $this->assertEquals('default', $value);
+    }
+
     public function testGetThrowsErrorIfRegistryDoesNotContainerContainerByKey()
     {
         try {
