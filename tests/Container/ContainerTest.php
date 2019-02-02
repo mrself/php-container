@@ -31,6 +31,12 @@ class ContainerTest extends TestCase
         $this->assertTrue(false);
     }
 
+    public function testGetUseDefaultValueIfItIsProvidedAndServiceIsAbsent()
+    {
+        $result = $this->container->get('key', 1);
+        $this->assertEquals(1, $result);
+    }
+
     public function testItSetsServiceByKey()
     {
         $this->container->set('key', 1);
@@ -77,6 +83,12 @@ class ContainerTest extends TestCase
             return;
         }
         $this->assertTrue(false);
+    }
+
+    public function testGetParameterUseDefaultValueIfItIsProvidedAndParameterIsAbsent()
+    {
+        $result = $this->container->getParameter('key', 1);
+        $this->assertEquals(1, $result);
     }
 
     public function testItSetsParameterByKey()

@@ -14,11 +14,13 @@ class Container
      */
 	protected $params = [];
 
-	// @todo add default value param
-    public function get(string $key)
+    public function get(string $key, $default = false)
     {
         if (!$this->has($key)) {
-            throw NotFoundException::service($key);
+            if ($default === false) {
+                throw NotFoundException::service($key);
+            }
+            return $default;
         }
         return $this->services[$key];
 	}
@@ -36,10 +38,13 @@ class Container
         return array_key_exists($key, $this->services);
 	}
 
-    public function getParameter(string $key)
+    public function getParameter(string $key, $default = false)
     {
         if (!$this->hasParameter($key)) {
-            throw NotFoundException::parameter($key);
+            if ($default === false) {
+                throw NotFoundException::parameter($key);
+            }
+            return $default;
         }
         return $this->params[$key];
     }
