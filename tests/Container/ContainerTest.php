@@ -138,6 +138,26 @@ class ContainerTest extends TestCase
      * End services tests
      */
 
+    public function testMakeCreatesInstance()
+    {
+        $service = new class {};
+        $services = ['service' => $service];
+        $params = ['param' => 'param1'];
+        $container = Container::make(compact('services', 'params'));
+        $this->assertEquals($services, $container->getServices());
+        $this->assertEquals($params, $container->getParameters());
+    }
+
+    public function testWith()
+    {
+        $service = new class {};
+        $services = ['service' => $service];
+        $params = ['param' => 'param1'];
+        $container = Container::with($services, $params);
+        $this->assertEquals($services, $container->getServices());
+        $this->assertEquals($params, $container->getParameters());
+    }
+
     public function setUp()
     {
         $this->container = new Container();

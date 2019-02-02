@@ -81,4 +81,17 @@ class Container
     {
         return $this->params;
     }
+
+    public static function with(array $services = [], array $params = [])
+    {
+        return static::make(compact('services', 'params'));
+    }
+
+    public static function make(array $options)
+    {
+        $self = new static();
+        $self->setServices($options['services']);
+        $self->setParameters($options['params']);
+        return $self;
+    }
 }
