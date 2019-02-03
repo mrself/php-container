@@ -87,11 +87,15 @@ class Container
         return static::make(compact('services', 'params'));
     }
 
-    public static function make(array $options)
+    public static function make(array $options = [])
     {
         $self = new static();
-        $self->setServices($options['services']);
-        $self->setParameters($options['params']);
+        if (array_key_exists('services', $options)) {
+            $self->setServices($options['services']);
+        }
+        if (array_key_exists('params', $options)) {
+            $self->setParameters($options['params']);
+        }
         return $self;
     }
 }
