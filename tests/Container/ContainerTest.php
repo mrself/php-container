@@ -160,6 +160,6 @@ class ContainerTest extends TestCase
 
     public function setUp()
     {
-        $this->container = new Container();
+        $this->container = Container::make();
     }
 }

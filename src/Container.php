@@ -14,6 +14,10 @@ class Container
      */
 	protected $params = [];
 
+	protected function __construct()
+    {
+    }
+
     public function get(string $key, $default = false)
     {
         if (!$this->has($key)) {
