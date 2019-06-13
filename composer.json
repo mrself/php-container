@@ -1,6 +1,5 @@
 {
   "name": "mrself/container",
-  "version": "1.4.1",
   "autoload": {
     "psr-4": {
       "Mrself\\Container\\": "./src"
