@@ -34,6 +34,18 @@ class FallbackContainerTest extends TestCase
         $this->assertEquals('value', $actual);
     }
 
+    /**
+     * @expectedException \Mrself\Container\NotFoundException
+     */
+    public function testItDoesNotUseContainerIfItDoesNotExist()
+    {
+        $container = Container::make([
+            'fallbackContainer' => 'My'
+        ]);
+
+        $container->get('service');
+    }
+
     protected function setUp()
     {
         parent::setUp();

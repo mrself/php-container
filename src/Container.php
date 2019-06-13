@@ -61,7 +61,9 @@ class Container
         }
 
         if ($this->fallbackHas($key)) {
-            return $this->getFallbackContainer()->get($key);
+            if ($this->getFallbackContainer()) {
+                return $this->getFallbackContainer()->get($key);
+            }
         }
 
         return $default;
@@ -97,7 +99,7 @@ class Container
     protected function getFallbackContainer()
     {
         if (is_string($this->fallbackContainer)) {
-            return ContainerRegistry::get($this->fallbackContainer);
+            return ContainerRegistry::get($this->fallbackContainer, null);
         }
 
         return $this->fallbackContainer;
