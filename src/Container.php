@@ -2,20 +2,45 @@
 
 namespace Mrself\Container;
 
+use Mrself\Container\Registry\ContainerRegistry;
+use Mrself\Options\Annotation\Option;
+use Mrself\Options\WithOptionsTrait;
+
 class Container
 {
+    use WithOptionsTrait {
+        make as parentMake;
+    }
+
     /**
+     * @Option()
+     * @var ContainerInterface|null
+     */
+    protected $fallbackContainer;
+
+    /**
+     * @Option()
      * @var array
      */
 	protected $services = [];
 
     /**
+     * @Option()
      * @var array
      */
 	protected $params = [];
 
 	protected function __construct()
     {
+    }
+
+    protected function getOptionsSchema()
+    {
+        return [
+            'defaults' => [
+                'fallbackContainer' => null
+            ]
+        ];
     }
 
     public function get(string $key, $default = false)
@@ -26,7 +51,20 @@ class Container
             }
             return $default;
         }
-        return $this->services[$key];
+        return $this->internalGet($key, $default);
+	}
+
+    protected function internalGet(string $key, $default)
+	{
+        if ($this->ownHas($key)) {
+            return $this->services[$key];
+        }
+
+        if ($this->fallbackHas($key)) {
+            return $this->getFallbackContainer()->get($key);
+        }
+
+        return $default;
 	}
 
     public function set(string $key, $service, bool $overwrite = false)
@@ -38,6 +76,34 @@ class Container
 	}
 
     public function has(string $key): bool
+    {
+        $result = $this->ownHas($key);
+        if ($result) {
+            return true;
+        }
+
+        return $this->fallbackHas($key);
+	}
+
+    public function fallbackHas(string $key): bool
+	{
+        if ($this->getFallbackContainer()) {
+            return $this->getFallbackContainer()->has($key);
+        }
+
+        return false;
+	}
+
+    protected function getFallbackContainer()
+    {
+        if (is_string($this->fallbackContainer)) {
+            return ContainerRegistry::get($this->fallbackContainer);
+        }
+
+        return $this->fallbackContainer;
+	}
+
+    public function ownHas(string $key): bool
     {
         return array_key_exists($key, $this->services);
 	}
@@ -88,18 +154,16 @@ class Container
 
     public static function with(array $services = [], array $params = [])
     {
-        return static::make(compact('services', 'params'));
+        return static::create(compact('services', 'params'));
     }
 
     public static function make(array $options = [])
     {
-        $self = new static();
-        if (array_key_exists('services', $options)) {
-            $self->setServices($options['services']);
-        }
-        if (array_key_exists('params', $options)) {
-            $self->setParameters($options['params']);
-        }
-        return $self;
+        return static::parentMake($options);
+    }
+
+    public static function create(array $options = []): self
+    {
+        return static::parentMake($options);
     }
 }
