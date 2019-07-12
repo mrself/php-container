@@ -14,7 +14,7 @@ class FallbackContainerTest extends TestCase
         $fallbackContainer->set('service', 'value');
         ContainerRegistry::add('My', $fallbackContainer);
         $container = Container::make([
-            'fallbackContainer' => 'My'
+            'fallbackContainers' => ['My']
         ]);
 
         $actual = $container->get('service');
@@ -27,7 +27,7 @@ class FallbackContainerTest extends TestCase
         $fallbackContainer->set('service', 'value');
         ContainerRegistry::add('My', $fallbackContainer);
         $container = Container::make([
-            'fallbackContainer' => $fallbackContainer
+            'fallbackContainers' => [$fallbackContainer]
         ]);
 
         $actual = $container->get('service');
@@ -40,7 +40,7 @@ class FallbackContainerTest extends TestCase
     public function testItDoesNotUseContainerIfItDoesNotExist()
     {
         $container = Container::make([
-            'fallbackContainer' => 'My'
+            'fallbackContainers' => ['My']
         ]);
 
         $container->get('service');

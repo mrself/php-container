@@ -14,9 +14,9 @@ class Container
 
     /**
      * @Option()
-     * @var ContainerInterface|null
+     * @var ContainerInterface[]|string[]
      */
-    protected $fallbackContainer;
+    protected $fallbackContainers = [];
 
     /**
      * @Option()
@@ -34,15 +34,12 @@ class Container
     {
     }
 
-    protected function getOptionsSchema()
-    {
-        return [
-            'defaults' => [
-                'fallbackContainer' => null
-            ]
-        ];
-    }
-
+    /**
+     * @param string $key
+     * @param bool $default
+     * @return bool|mixed
+     * @throws Registry\NotFoundException
+     */
     public function get(string $key, $default = false)
     {
         if (!$this->has($key)) {
@@ -54,21 +51,34 @@ class Container
         return $this->internalGet($key, $default);
 	}
 
+    /**
+     * @param string $key
+     * @param $default
+     * @return mixed
+     * @throws Registry\NotFoundException
+     */
     protected function internalGet(string $key, $default)
 	{
         if ($this->ownHas($key)) {
             return $this->services[$key];
         }
 
-        if ($this->fallbackHas($key)) {
-            if ($this->getFallbackContainer()) {
-                return $this->getFallbackContainer()->get($key);
+        foreach ($this->getFallbackContainers() as $container) {
+            if ($container->has($key)) {
+                return $container->get($key);
             }
         }
+
 
         return $default;
 	}
 
+    /**
+     * @param string $key
+     * @param $service
+     * @param bool $overwrite
+     * @throws Registry\NotFoundException
+     */
     public function set(string $key, $service, bool $overwrite = false)
     {
         if (!$overwrite && $this->has($key)) {
@@ -77,6 +87,11 @@ class Container
         $this->services[$key] = $service;
 	}
 
+    /**
+     * @param string $key
+     * @return bool
+     * @throws Registry\NotFoundException
+     */
     public function has(string $key): bool
     {
         $result = $this->ownHas($key);
@@ -87,22 +102,20 @@ class Container
         return $this->fallbackHas($key);
 	}
 
+    /**
+     * @param string $key
+     * @return bool
+     * @throws Registry\NotFoundException
+     */
     public function fallbackHas(string $key): bool
 	{
-        if ($this->getFallbackContainer()) {
-            return $this->getFallbackContainer()->has($key);
+        foreach ($this->getFallbackContainers() as $container) {
+            if ($container->has($key)) {
+                return true;
+            }
         }
 
         return false;
-	}
-
-    protected function getFallbackContainer()
-    {
-        if (is_string($this->fallbackContainer)) {
-            return ContainerRegistry::get($this->fallbackContainer, null);
-        }
-
-        return $this->fallbackContainer;
 	}
 
     public function ownHas(string $key): bool
@@ -167,5 +180,24 @@ class Container
     public static function create(array $options = []): self
     {
         return static::parentMake($options);
+    }
+
+    /**
+     * @return ContainerInterface[]
+     * @throws Registry\NotFoundException
+     */
+    protected function getFallbackContainers(): array
+    {
+        $result = [];
+        foreach ($this->fallbackContainers as $container) {
+            if (is_string($container)) {
+                $container = ContainerRegistry::get($container, null);
+                if (is_null($container)) {
+                    continue;
+                }
+            }
+            $result[] = $container;
+        }
+        return $result;
     }
 }
