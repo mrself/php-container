@@ -6,7 +6,7 @@ use Mrself\Container\Registry\ContainerRegistry;
 use Mrself\Options\Annotation\Option;
 use Mrself\Options\WithOptionsTrait;
 
-class Container
+class Container implements ContainerInterface
 {
     use WithOptionsTrait {
         make as parentMake;
