@@ -12,7 +12,7 @@
   },
   "require": {
     "php": "^7.2",
-    "mrself/options": "^2.8"
+    "mrself/options": "^2.13.2"
   },
   "require-dev": {
     "phpunit/phpunit": "^7",
