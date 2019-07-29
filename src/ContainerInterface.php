@@ -15,4 +15,6 @@ interface ContainerInterface
     public function getParameter(string $name);
 
     public function setParameter(string $name, $param, bool $overwrite = false);
+
+    public static function make(array $options = []);
 }

@@ -8,9 +8,7 @@ use Mrself\Options\WithOptionsTrait;
 
 class Container implements ContainerInterface
 {
-    use WithOptionsTrait {
-        make as parentMake;
-    }
+    use WithOptionsTrait;
 
     /**
      * @Option()
@@ -172,14 +170,9 @@ class Container implements ContainerInterface
         return static::create(compact('services', 'params'));
     }
 
-    public static function make(array $options = [])
-    {
-        return static::parentMake($options);
-    }
-
     public static function create(array $options = []): self
     {
-        return static::parentMake($options);
+        return static::make($options);
     }
 
     /**
