@@ -4,7 +4,7 @@ namespace Mrself\Container;
 
 interface ContainerInterface
 {
-    public function get(string $name);
+    public function get(string $name, $default = false);
 
     public function set(string $name, $service, bool $overwrite = false);
 

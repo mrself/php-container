@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ecbc7f15e6282dfd83ef8346cef73765",
+    "content-hash": "bcc02abefaed490fee272df81cda9b03",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -136,21 +136,21 @@
         },
         {
             "name": "mrself/options",
-            "version": "v2.8.3",
+            "version": "v2.13.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mrself/php-options.git",
-                "reference": "fee44fad2e180dd1d227b3add440fc268c153861"
+                "reference": "c586e678bb2b1710b38e515a599d52a60909a0c1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mrself/php-options/zipball/fee44fad2e180dd1d227b3add440fc268c153861",
-                "reference": "fee44fad2e180dd1d227b3add440fc268c153861",
+                "url": "https://api.github.com/repos/mrself/php-options/zipball/c586e678bb2b1710b38e515a599d52a60909a0c1",
+                "reference": "c586e678bb2b1710b38e515a599d52a60909a0c1",
                 "shasum": ""
             },
             "require": {
                 "doctrine/annotations": "^1.6",
-                "mrself/container": "1.3.0",
+                "mrself/container": "^1.4.1",
                 "mrself/util": "^1.5.0",
                 "php-di/phpdoc-reader": "^2.1",
                 "symfony/options-resolver": "^4.2"
@@ -166,7 +166,7 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2019-06-04T05:14:27+00:00"
+            "time": "2019-07-27T09:00:19+00:00"
         },
         {
             "name": "mrself/util",
@@ -238,16 +238,16 @@
         },
         {
             "name": "symfony/options-resolver",
-            "version": "v4.3.1",
+            "version": "v4.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/options-resolver.git",
-                "reference": "914e0edcb7cd0c9f494bc023b1d47534f4542332"
+                "reference": "40762ead607c8f792ee4516881369ffa553fee6f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/options-resolver/zipball/914e0edcb7cd0c9f494bc023b1d47534f4542332",
-                "reference": "914e0edcb7cd0c9f494bc023b1d47534f4542332",
+                "url": "https://api.github.com/repos/symfony/options-resolver/zipball/40762ead607c8f792ee4516881369ffa553fee6f",
+                "reference": "40762ead607c8f792ee4516881369ffa553fee6f",
                 "shasum": ""
             },
             "require": {
@@ -288,7 +288,7 @@
                 "configuration",
                 "options"
             ],
-            "time": "2019-05-10T05:38:46+00:00"
+            "time": "2019-06-13T11:01:17+00:00"
         }
     ],
     "packages-dev": [
