@@ -12,7 +12,7 @@ interface ContainerInterface
 
     public function fallbackHas(string $name): bool;
 
-    public function getParameter(string $name);
+    public function getParameter(string $name, $default = false);
 
     public function setParameter(string $name, $param, bool $overwrite = false);
 
