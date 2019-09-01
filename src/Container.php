@@ -55,7 +55,7 @@ class Container implements ContainerInterface
      * @return mixed
      * @throws Registry\NotFoundException
      */
-    protected function internalGet(string $key, $default)
+    protected function internalGet(string $key, $default = false)
 	{
         if ($this->ownHas($key)) {
             return $this->services[$key];
