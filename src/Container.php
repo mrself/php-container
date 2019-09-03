@@ -100,6 +100,11 @@ class Container implements ContainerInterface
         return $this->fallbackHas($key);
 	}
 
+    public function addFallbackContainer($container)
+    {
+        $this->fallbackContainers[] = $container;
+	}
+
     /**
      * @param string $key
      * @return bool
