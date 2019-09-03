@@ -79,7 +79,7 @@ class Container implements ContainerInterface
      */
     public function set(string $key, $service, bool $overwrite = false)
     {
-        if (!$overwrite && $this->has($key)) {
+        if (!$overwrite && $this->ownHas($key)) {
             throw OverwritingException::service($key, $service);
         }
         $this->services[$key] = $service;
