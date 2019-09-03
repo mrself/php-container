@@ -94,6 +94,13 @@ class RegistryTest extends TestCase
         $this->assertFalse(ContainerRegistry::has('key'));
     }
 
+    public function testResetSavesSkipContainers()
+    {
+        ContainerRegistry::add('key', $this->container);
+        ContainerRegistry::reset('key');
+        $this->assertTrue(ContainerRegistry::has('key'));
+    }
+
     protected function defineContainer()
     {
         $this->container = new class {

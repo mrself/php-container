@@ -59,9 +59,16 @@ class ContainerRegistry
         return self::$containers;
     }
 
-    public static function reset()
+    public static function reset($skip = [])
     {
-        self::$containers = [];
+        $containers = [];
+        $skip = (array) $skip;
+        foreach (static::$containers as $namespace => $container) {
+            if (in_array($namespace, $skip)) {
+                $containers[$namespace] = $container;
+            }
+        }
+        static::$containers = $containers;
     }
 
     protected static function isContainerValid($container)
