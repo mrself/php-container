@@ -24,6 +24,15 @@ class ContainerTest extends TestCase
         $this->assertEquals(1, $this->container->get('key'));
     }
 
+    public function testGetRetrievesCallbackIfItExists()
+    {
+        $this->container->on('key', function () {
+            return 'someComputedValue';
+        });
+        $result = $this->container->get('key');
+        $this->assertEquals('someComputedValue', $result);
+    }
+
     public function testGetThrowsErrorIfServiceDoesNotExistByProvidedKey()
     {
         try {
