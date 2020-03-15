@@ -28,6 +28,13 @@ class Container implements ContainerInterface
      */
 	protected $params = [];
 
+    /**
+     * @var array[]
+     */
+	protected $callbacks = [];
+
+	protected $callbacksCache = [];
+
 	protected function __construct()
     {
     }
@@ -40,6 +47,11 @@ class Container implements ContainerInterface
      */
     public function get(string $key, $default = false)
     {
+        if ($this->hasCallback($key)) {
+            $this->addCallback($key);
+            return $this->services[$key];
+        }
+
         if (!$this->has($key)) {
             if ($default === false) {
                 throw NotFoundException::service($key);
@@ -126,6 +138,34 @@ class Container implements ContainerInterface
         return array_key_exists($key, $this->services);
 	}
 
+    protected function addCallback($id)
+    {
+        $callback = $this->callbacksCache[$id];
+
+        if ($callback['isSingleton'] && !isset($this->services[$id])) {
+            $this->services[$id] = $callback['callback']();
+        }
+	}
+
+    public function hasCallback($id): bool
+    {
+        $result = $this->findCallback($id);
+
+        if ($result) {
+            $this->callbacksCache[$id] = $result;
+        }
+
+        return !!$result;
+	}
+
+    protected function findCallback($id)
+    {
+        $result = array_filter($this->callbacks, function (array $callback) use ($id) {
+            return $callback['id'] === $id;
+        });
+        return reset($result);
+	}
+
     public function getParameter(string $key, $default = false)
     {
         if (!$this->hasParameter($key)) {
@@ -168,6 +208,19 @@ class Container implements ContainerInterface
     public function getParameters(): array
     {
         return $this->params;
+    }
+
+    public function on(string $serviceId, $callback, bool $isSingleton = true)
+    {
+        if (isset($this->services[$serviceId])) {
+            throw new CanNotAddCallbackWithExistentKey($serviceId);
+        }
+
+        $this->callbacks[] = [
+            'callback' => $callback,
+            'id' => $serviceId,
+            'isSingleton' => $isSingleton
+        ];
     }
 
     public static function with(array $services = [], array $params = [])
