@@ -6,6 +6,16 @@ use Mrself\Container\Registry\ContainerRegistry;
 
 abstract class ServiceProvider
 {
+    /**
+     * @var Container
+     */
+    protected $container;
+
+    /**
+     * @var ServiceProvider[]
+     */
+    protected $dependencies = [];
+
     public function register()
     {
         $namespace = $this->getNamespace();
@@ -13,16 +23,25 @@ abstract class ServiceProvider
             return;
         }
 
-        ContainerRegistry::add($namespace, $this->getContainer());
+        $this->container = $this->getContainer();
+        ContainerRegistry::add($namespace, $this->container);
 
-        foreach ($this->getDependentProviders() as $provider) {
-            $provider::make()->register();
-        }
+        $this->makeDependencies();
+        $this->registerDependencies();
+        $this->selfRegister();
     }
 
     public function boot()
     {
+        $this->bootDependencies();
+        $this->selfBoot();
+    }
 
+    protected function makeDependencies()
+    {
+        foreach ($this->getDependentProviders() as $provider) {
+            $this->dependencies[] = $provider::make();
+        }
     }
 
     protected function getDependentProviders(): array
@@ -37,5 +56,27 @@ abstract class ServiceProvider
     public static function make()
     {
         return new static();
+    }
+
+    protected function registerDependencies()
+    {
+        foreach ($this->dependencies as $dependency) {
+            $dependency->register();
+        }
+    }
+
+    protected function bootDependencies()
+    {
+        foreach ($this->dependencies as $dependency) {
+            $dependency->boot();
+        }
+    }
+
+    protected function selfBoot()
+    {
+    }
+
+    protected function selfRegister()
+    {
     }
 }
