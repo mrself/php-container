@@ -72,6 +72,30 @@ class ProviderTest extends TestCase
         $this->assertInstanceOf(TestContainer::class, $expectedContainer);
     }
 
+    public function testItBootsDependentProviders()
+    {
+        $provider = new class extends ServiceProvider {
+            protected function getContainer(): Container
+            {
+                return TestContainer::make();
+            }
+
+            protected function getNamespace(): string
+            {
+                return 'namespace';
+            }
+
+            protected function getDependentProviders(): array
+            {
+                return [TestProvider::class];
+            }
+        };
+        $provider->register();
+        $provider->boot();
+        $container = ContainerRegistry::get('namespace2');
+        $this->assertTrue($container->getParameter('isBooted', null));
+    }
+
     protected function setUp()
     {
         parent::setUp();
@@ -84,6 +108,7 @@ class TestContainer extends Container {
 }
 
 class TestProvider extends ServiceProvider {
+
     protected function getContainer(): Container
     {
         return TestContainer::make();
@@ -94,4 +119,8 @@ class TestProvider extends ServiceProvider {
         return 'namespace2';
     }
 
+    public function boot()
+    {
+        $this->container->setParameter('isBooted', true);
+    }
 }

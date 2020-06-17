@@ -2,6 +2,8 @@
 
 namespace Mrself\Container\Registry;
 
+use Mrself\Container\Container;
+
 class ContainerRegistry
 {
     /**
@@ -12,7 +14,7 @@ class ContainerRegistry
     /**
      * @param string $namespace
      * @param bool $default
-     * @return mixed
+     * @return mixed|Container
      * @throws NotFoundException
      */
     public static function get(string $namespace, $default = false)
