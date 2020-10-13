@@ -4,6 +4,8 @@ namespace Mrself\Container;
 
 use Mrself\Container\Registry\ContainerRegistry;
 use Mrself\Options\Annotation\Option;
+use Mrself\Options\OptionableInterface;
+use Mrself\Options\OptionsUtil;
 use Mrself\Options\WithOptionsTrait;
 
 class Container implements ContainerInterface
@@ -95,6 +97,35 @@ class Container implements ContainerInterface
             throw OverwritingException::service($key, $service);
         }
         $this->services[$key] = $service;
+	}
+
+    /**
+     * Adds an optionable class (maker) as a service.
+     *
+     * ```php
+     * class Maker implements OptionableInterface {
+     * use WithOptionsTrait;
+     * }
+     * $container->setMaker(Maker::class);
+     * ```
+     *
+     * @param string $class
+     * @param bool $shared
+     * @param array $params
+     * @throws CanNotAddCallbackWithExistentKey
+     * @throws ClassIsNotMakerException
+     * @see WithOptionsTrait
+     * @see OptionableInterface
+     */
+    public function setMaker(string $class, bool $shared = true, array $params = [])
+    {
+        if (!OptionsUtil::isClassOptionable($class)) {
+            throw new ClassIsNotMakerException($class);
+        }
+
+        $this->on($class, function () use ($class, $params) {
+            return $class::make($params);
+        }, $shared);
 	}
 
     /**
