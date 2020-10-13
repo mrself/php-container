@@ -2,9 +2,12 @@
 
 namespace Mrself\Container\Tests\Container;
 
+use Mrself\Container\ClassIsNotMakerException;
 use Mrself\Container\Container;
 use Mrself\Container\NotFoundException;
 use Mrself\Container\OverwritingException;
+use Mrself\Options\OptionableInterface;
+use Mrself\Options\WithOptionsTrait;
 use PHPUnit\Framework\TestCase;
 
 class ContainerTest extends TestCase
@@ -167,8 +170,37 @@ class ContainerTest extends TestCase
         $this->assertEquals($params, $container->getParameters());
     }
 
+    public function testSetMaker()
+    {
+        $this->container->setMaker(Maker::class);
+        $service = $this->container->get(Maker::class);
+        $this->assertInstanceOf(Maker::class, $service);
+    }
+
+    public function testSetMakerDefinesServiceAsSingleton()
+    {
+        $this->container->setMaker(Maker::class);
+        $service = $this->container->get(Maker::class);
+        $service->isInited = true;
+        $service = $this->container->get(Maker::class);
+        $this->assertTrue($service->isInited);
+    }
+
+    public function testSetMakerThrowsIfParamIsNotOptionable()
+    {
+        $this->expectException(ClassIsNotMakerException::class);
+        $this->container->setMaker(NonMaker::class);
+    }
+
     public function setUp()
     {
         $this->container = Container::make();
     }
 }
+
+class Maker implements OptionableInterface
+{
+    use WithOptionsTrait;
+}
+
+class NonMaker {}
