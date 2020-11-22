@@ -36,7 +36,7 @@ class ContainerRegistry
      * @throws NotFoundException
      * @throws OverwritingException
      */
-    public static function getOrMake(string $namespace)
+    private static function getOrMake(string $namespace)
     {
         $container = static::get($namespace, null);
         return $container ?: static::makeAndAdd($namespace);
@@ -49,7 +49,7 @@ class ContainerRegistry
      * @throws InvalidContainerException
      * @throws OverwritingException
      */
-    public static function makeAndAdd(string $namespace): Container
+    private static function makeAndAdd(string $namespace): Container
     {
         /** @var Container $namespace */
         $container = $namespace::make();
