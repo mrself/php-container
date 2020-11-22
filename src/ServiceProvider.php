@@ -122,12 +122,11 @@ abstract class ServiceProvider
      * @return Container[]
      * @throws Registry\InvalidContainerException
      * @throws Registry\NotFoundException
-     * @throws Registry\OverwritingException
      */
     private function initializeContainers(array $containers)
     {
         return ArrayUtil::map($containers, function (string $containerClass) {
-            return ContainerRegistry::getOrMake($containerClass);
+            return ContainerRegistry::get($containerClass);
         });
     }
 }

@@ -22,15 +22,20 @@ class FallbackContainerTest extends TestCase
                 return 'namespace';
             }
 
+            protected function getDependentProviders(): array
+            {
+                return [FallbackTestProvider::class];
+            }
+
             protected function getFallbackContainers(): array
             {
-                return [FallbackTestContainer2::class];
+                return ['namespace2'];
             }
         };
 
         $provider->registerAndBoot();
 
-        ContainerRegistry::get(FallbackTestContainer2::class)->set('service', 'value');
+        ContainerRegistry::get('namespace2')->set('service', 'value');
         $value = ContainerRegistry::get('namespace')->get('service');
         $this->assertEquals('value', $value);
     }
@@ -53,7 +58,7 @@ class FallbackTestProvider extends ServiceProvider {
 
     protected function getContainer(): Container
     {
-        return FallbackTestContainer::make();
+        return FallbackTestContainer2::make();
     }
 
     protected function getNamespace(): string
