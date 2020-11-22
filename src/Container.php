@@ -174,7 +174,7 @@ class Container implements ContainerInterface
 
     public function ownHas(string $key): bool
     {
-        return array_key_exists($key, $this->services);
+        return array_key_exists($key, $this->services) || $this->hasCallback($key);
 	}
 
     protected function addCallback($id)

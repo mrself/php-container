@@ -30,8 +30,9 @@ class FallbackContainerTest extends TestCase
 
         $provider->registerAndBoot();
 
-        $value = ContainerRegistry::get(FallbackTestContainer2::class)->prop;
-        $this->assertEquals(1, $value);
+        ContainerRegistry::get(FallbackTestContainer2::class)->set('service', 'value');
+        $value = ContainerRegistry::get('namespace')->get('service');
+        $this->assertEquals('value', $value);
     }
 
     protected function setUp()

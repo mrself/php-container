@@ -84,6 +84,12 @@ class ContainerTest extends TestCase
         $this->assertFalse($this->container->has('key'));
     }
 
+    public function testHasReturnsTrueIfThereIsACallback()
+    {
+        $this->container->on('key', 'value');
+        $this->assertTrue($this->container->has('key'));
+    }
+
     /**
      * End services tests
      */
