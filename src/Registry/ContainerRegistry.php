@@ -29,6 +29,35 @@ class ContainerRegistry
     }
 
     /**
+     * Returns a container by $namespace or creates it and adds to the ContainerRegistry
+     * @param string $namespace
+     * @return Container
+     * @throws InvalidContainerException
+     * @throws NotFoundException
+     * @throws OverwritingException
+     */
+    public static function getOrMake(string $namespace)
+    {
+        $container = static::get($namespace, null);
+        return $container ?: static::makeAndAdd($namespace);
+    }
+
+    /**
+     * Makes a container and adds it to the ContainerRegistry
+     * @param string $namespace
+     * @return Container
+     * @throws InvalidContainerException
+     * @throws OverwritingException
+     */
+    public static function makeAndAdd(string $namespace): Container
+    {
+        /** @var Container $namespace */
+        $container = $namespace::make();
+        static::add($namespace, $container);
+        return $container;
+    }
+
+    /**
      * @param string $namespace
      * @param $container
      * @param bool $overwrite
