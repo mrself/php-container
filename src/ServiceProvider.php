@@ -3,6 +3,7 @@
 namespace Mrself\Container;
 
 use Mrself\Container\Registry\ContainerRegistry;
+use Mrself\Util\ArrayUtil;
 
 abstract class ServiceProvider
 {
@@ -16,6 +17,11 @@ abstract class ServiceProvider
      */
     protected $dependencies = [];
 
+    /**
+     * @throws Registry\InvalidContainerException
+     * @throws Registry\NotFoundException
+     * @throws Registry\OverwritingException
+     */
     public function register()
     {
         $namespace = $this->getNamespace();
@@ -29,6 +35,7 @@ abstract class ServiceProvider
         $this->makeDependencies();
         $this->registerDependencies();
         $this->selfRegister();
+        $this->setFallbackContainers();
     }
 
     public function container()
@@ -89,5 +96,38 @@ abstract class ServiceProvider
 
     protected function selfRegister()
     {
+    }
+
+    /**
+     * @return string[]
+     */
+    protected function getFallbackContainers(): array
+    {
+        return [];
+    }
+
+    /**
+     * @throws Registry\InvalidContainerException
+     * @throws Registry\NotFoundException
+     * @throws Registry\OverwritingException
+     */
+    private function setFallbackContainers()
+    {
+        $containers = $this->initializeContainers($this->getFallbackContainers());
+        $this->container->addFallbackContainers($containers);
+    }
+
+    /**
+     * @param string[] $containers
+     * @return Container[]
+     * @throws Registry\InvalidContainerException
+     * @throws Registry\NotFoundException
+     * @throws Registry\OverwritingException
+     */
+    private function initializeContainers(array $containers)
+    {
+        return ArrayUtil::map($containers, function (string $containerClass) {
+            return ContainerRegistry::getOrMake($containerClass);
+        });
     }
 }

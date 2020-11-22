@@ -149,6 +149,14 @@ class Container implements ContainerInterface
 	}
 
     /**
+     * @param Container[] $containers
+     */
+    public function addFallbackContainers(array $containers)
+    {
+        $this->fallbackContainers = array_merge($this->fallbackContainers, $containers);
+	}
+
+    /**
      * @param string $key
      * @return bool
      * @throws Registry\NotFoundException
