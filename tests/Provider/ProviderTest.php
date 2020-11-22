@@ -96,6 +96,49 @@ class ProviderTest extends TestCase
         $this->assertTrue($container->getParameter('isBooted', null));
     }
 
+    public function testContainerMethodReturnsContainer()
+    {
+        $provider = new class extends ServiceProvider {
+            protected function getContainer(): Container
+            {
+                return TestContainer::make();
+            }
+
+            protected function getNamespace(): string
+            {
+                return 'namespace';
+            }
+        };
+        $provider->register();
+        $container = $provider->container();
+        $this->assertInstanceOf(TestContainer::class, $container);
+    }
+
+    public function testContainerMethodReturnsContainerIfContainerExistedBeforeRegister()
+    {
+        $provider = new class extends ServiceProvider {
+            protected function getContainer(): Container
+            {
+                return TestContainer::make();
+            }
+
+            protected function getNamespace(): string
+            {
+                return 'namespace';
+            }
+        };
+
+        $container = TestContainer::make();
+        $container->setParameter('property', 'value');
+        ContainerRegistry::add('namespace', $container);
+
+        $provider->register();
+        $container = $provider->container();
+
+        $this->assertInstanceOf(TestContainer::class, $container);
+        $this->assertEquals('value', $container->getParameter('property'));
+    }
+
     protected function setUp()
     {
         parent::setUp();
