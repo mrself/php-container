@@ -42,6 +42,12 @@ abstract class ServiceProvider
         $this->selfBoot();
     }
 
+    public function registerAndBoot()
+    {
+        $this->register();
+        $this->boot();
+    }
+
     protected function makeDependencies()
     {
         foreach ($this->getDependentProviders() as $provider) {
