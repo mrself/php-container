@@ -31,6 +31,11 @@ abstract class ServiceProvider
         $this->selfRegister();
     }
 
+    public function container()
+    {
+        return $this->container ?: ContainerRegistry::get($this->getNamespace());
+    }
+
     public function boot()
     {
         $this->bootDependencies();
